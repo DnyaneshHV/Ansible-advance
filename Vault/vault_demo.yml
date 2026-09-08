@@ -1,0 +1,19 @@
+---
+# Demo: Ansible Vault
+# Vault is used to keep secrets safe.
+# In real usage, the file should be encrypted before running the playbook.
+
+- name: Read secret values from a vault file
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - secrets.yml
+
+  tasks:
+    - name: Show that the secret was loaded
+      ansible.builtin.debug:
+        msg: "Database password loaded from vault file: {{ db_password }}"
+
+    - name: Show the application secret
+      ansible.builtin.debug:
+        msg: "API token loaded correctly: {{ api_token }}"

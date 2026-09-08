@@ -1,0 +1,54 @@
+---
+# Demo: Error handling in Ansible
+# This playbook shows how to handle problems gracefully.
+# In real environments, this helps avoid breaking the whole playbook
+# when one task fails.
+
+- name: Demonstrate error handling techniques
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: A normal task that succeeds
+      ansible.builtin.command: echo "Everything is working fine"
+      register: success_output
+      changed_when: false
+
+    - name: Print the successful output
+      ansible.builtin.debug:
+        msg: "Task output: {{ success_output.stdout }}"
+
+    - name: Intentionally create a failure to show rescue handling
+      ansible.builtin.command: ls /this/path/does/not/exist
+      register: broken_task
+      ignore_errors: true
+      changed_when: false
+
+    - name: Rescue block runs after a failed task
+      block:
+        - name: Example block task
+          ansible.builtin.debug:
+            msg: "This task is inside the block"
+
+        - name: Try a task that should fail
+          ansible.builtin.command: false
+          register: fail_task
+          failed_when: false
+      rescue:
+        - name: Recovery action
+          ansible.builtin.debug:
+            msg: "The task failed, but we recovered gracefully by using rescue."
+      always:
+        - name: Always run this section
+          ansible.builtin.debug:
+            msg: "This always runs after block/rescue, whether the task succeeded or failed."
+
+    - name: A task that checks a file and is allowed to fail
+      ansible.builtin.command: test -f /etc/hosts
+      register: hosts_check
+      failed_when: hosts_check.rc != 0
+      changed_when: false
+
+    - name: Final success message
+      ansible.builtin.debug:
+        msg: "The example is complete."

@@ -1,0 +1,48 @@
+---
+# Demo: Filters and lookups in Ansible
+# Filters change values, while lookups fetch data from external sources.
+# This example is written to make the concepts easy to understand.
+
+- name: Learn Ansible filters and lookups
+  hosts: localhost
+  gather_facts: false
+  vars:
+    names:
+      - ram
+      - shyam
+      - deepa
+      - anita
+    username: ""
+
+  tasks:
+    - name: Show the original list
+      ansible.builtin.debug:
+        msg: "Original names: {{ names }}"
+
+    - name: Use map filter to make names uppercase
+      ansible.builtin.debug:
+        msg: "Uppercase names: {{ names | map('upper') | list }}"
+
+    - name: Use select filter to keep names that start with 's'
+      ansible.builtin.debug:
+        msg: "Names starting with s: {{ names | select('match', '^s') | list }}"
+
+    - name: Use default filter when a value is empty
+      ansible.builtin.debug:
+        msg: "Username after default: {{ username | default('guest', true) }}"
+
+    - name: Use lookup('env') to fetch environment variables
+      ansible.builtin.debug:
+        msg: "HOME environment variable: {{ lookup('env', 'HOME') }}"
+
+    - name: Use lookup('file') to read file content
+      ansible.builtin.debug:
+        msg: "First line from /etc/hosts: {{ lookup('file', '/etc/hosts').splitlines() | first }}"
+
+    - name: Use regex_search to find a pattern in a string
+      ansible.builtin.debug:
+        msg: "Pattern found in a sentence: {{ 'hello ansible world' | regex_search('ansible') }}"
+
+    - name: Use join filter to combine a list into a string
+      ansible.builtin.debug:
+        msg: "Joined names: {{ names | join(', ') }}"

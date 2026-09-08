@@ -1,0 +1,10 @@
+---
+# Demo: Using the nginx role
+# This playbook shows how to apply the role to a target group.
+# In a real environment, replace 'webservers' with your inventory group.
+
+- name: Apply nginx role to webservers
+  hosts: webservers
+  become: true
+  roles:
+    - nginx_role

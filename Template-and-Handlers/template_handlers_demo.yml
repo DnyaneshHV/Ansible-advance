@@ -1,0 +1,29 @@
+---
+# Demo: Templates and handlers in Ansible
+# Templates let you create files from Jinja2 templates.
+# Handlers are triggered when a task changes the system state.
+
+- name: Example of template rendering and handlers
+  hosts: localhost
+  gather_facts: false
+  vars:
+    app_name: demo_app
+    app_port: 8080
+
+  tasks:
+    - name: Create a target directory for demo config
+      ansible.builtin.file:
+        path: /tmp/ansible_demo
+        state: directory
+        mode: '0755'
+
+    - name: Render the application configuration using a template
+      ansible.builtin.template:
+        src: templates/app.conf.j2
+        dest: /tmp/ansible_demo/app.conf
+      notify: Restart demo service
+
+  handlers:
+    - name: Restart demo service
+      ansible.builtin.debug:
+        msg: "Handler triggered: Restarting {{ app_name }} on port {{ app_port }}"

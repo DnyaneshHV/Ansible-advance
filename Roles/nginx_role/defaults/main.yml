@@ -1,0 +1,8 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for nginx_role
+# Default variables are used when no custom value is passed.
+# This keeps the role reusable and easy to understand.
+
+nginx_package_name: nginx
+nginx_service_name: nginx

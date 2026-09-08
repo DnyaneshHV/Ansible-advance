@@ -1,0 +1,24 @@
+---
+# Demo: Plugins in Ansible
+# Plugins extend Ansible functionality.
+# Here we use a custom filter plugin created in the 'filter_plugins' directory.
+# The plugin is loaded automatically when Ansible sees the directory next to this playbook.
+
+- name: Demonstrate custom filter plugin usage
+  hosts: localhost
+  gather_facts: false
+  vars:
+    app_name: "nginx"
+
+  tasks:
+    - name: Use a custom filter to reverse the string
+      ansible.builtin.debug:
+        msg: "Reversed app name: {{ app_name | reverse_text }}"
+
+    - name: Use a custom filter to add a prefix
+      ansible.builtin.debug:
+        msg: "Prefixed app name: {{ app_name | add_prefix('service:') }}"
+
+    - name: Use built-in lookup plugin from Ansible
+      ansible.builtin.debug:
+        msg: "Current user from lookup plugin: {{ lookup('env', 'USER') }}"
