@@ -16,12 +16,15 @@
         path: /tmp/ansible_demo
         state: directory
         mode: '0755'
+        # Creating the directory
 
     - name: Render the application configuration using a template
       ansible.builtin.template:
         src: templates/app.conf.j2
         dest: /tmp/ansible_demo/app.conf
-      notify: Restart demo service
+      notify: Restart demo service  
+      # restart when the changes are done.
+      # here we use the template.
 
   handlers:
     - name: Restart demo service
