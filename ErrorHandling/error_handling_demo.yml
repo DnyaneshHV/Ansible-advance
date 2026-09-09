@@ -6,12 +6,14 @@
 
 - name: Demonstrate error handling techniques
   hosts: localhost
-  gather_facts: false
+  gather_facts: false   ## dont collect the system facts as they are not needed. and we are running on the localhost
+
+
 
   tasks:
     - name: A normal task that succeeds
       ansible.builtin.command: echo "Everything is working fine"
-      register: success_output
+      register: success_output     # stores the result here and force ansible to get the status ok
       changed_when: false
 
     - name: Print the successful output
@@ -21,7 +23,7 @@
     - name: Intentionally create a failure to show rescue handling
       ansible.builtin.command: ls /this/path/does/not/exist
       register: broken_task
-      ignore_errors: true
+      ignore_errors: true   # ignore what it does is even playbook fail here, it continues further as the ignore_error is true.
       changed_when: false
 
     - name: Rescue block runs after a failed task
@@ -33,21 +35,21 @@
         - name: Try a task that should fail
           ansible.builtin.command: false
           register: fail_task
-          failed_when: false
+          failed_when: false   # even when failed ansible will mark it as non zero.
       rescue:
         - name: Recovery action
           ansible.builtin.debug:
             msg: "The task failed, but we recovered gracefully by using rescue."
       always:
-        - name: Always run this section
+        - name: Always run this section    # This block will always execute wheather the block successed or fails.
           ansible.builtin.debug:
             msg: "This always runs after block/rescue, whether the task succeeded or failed."
 
     - name: A task that checks a file and is allowed to fail
       ansible.builtin.command: test -f /etc/hosts
       register: hosts_check
-      failed_when: hosts_check.rc != 0
-      changed_when: false
+      failed_when: hosts_check.rc != 0   
+      changed_when: false   # task is allowed to fail and like it will move forward with the other tasks.
 
     - name: Final success message
       ansible.builtin.debug:
