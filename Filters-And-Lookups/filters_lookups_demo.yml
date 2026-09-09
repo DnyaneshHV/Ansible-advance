@@ -2,6 +2,8 @@
 # Demo: Filters and lookups in Ansible
 # Filters change values, while lookups fetch data from external sources.
 # This example is written to make the concepts easy to understand.
+# Filters -> modify or transform data
+# Lookups is like -> look for the data from external sources.
 
 - name: Learn Ansible filters and lookups
   hosts: localhost
@@ -17,23 +19,28 @@
   tasks:
     - name: Show the original list
       ansible.builtin.debug:
-        msg: "Original names: {{ names }}"
+        msg: "Original names: {{ names }}"  
+        # gives the list of names.
 
     - name: Use map filter to make names uppercase
       ansible.builtin.debug:
-        msg: "Uppercase names: {{ names | map('upper') | list }}"
+        msg: "Uppercase names: {{ names | map('upper') | list }}"   
+        # list of names in uppercase
 
     - name: Use select filter to keep names that start with 's'
       ansible.builtin.debug:
-        msg: "Names starting with s: {{ names | select('match', '^s') | list }}"
+        msg: "Names starting with s: {{ names | select('match', '^s') | list }}"  
+        # ^ meas start of the string and where it is 's' there we can get the that name.
 
     - name: Use default filter when a value is empty
       ansible.builtin.debug:
-        msg: "Username after default: {{ username | default('guest', true) }}"
+        msg: "Username after default: {{ username | default('guest', true) }}"   
+        # using the username as default guest where value is empty.
 
     - name: Use lookup('env') to fetch environment variables
       ansible.builtin.debug:
-        msg: "HOME environment variable: {{ lookup('env', 'HOME') }}"
+        msg: "HOME environment variable: {{ lookup('env', 'HOME') }}"   
+        # looks for the files or data outside ansible, here enviornment variables.
 
     - name: Use lookup('file') to read file content
       ansible.builtin.debug:
@@ -41,8 +48,10 @@
 
     - name: Use regex_search to find a pattern in a string
       ansible.builtin.debug:
-        msg: "Pattern found in a sentence: {{ 'hello ansible world' | regex_search('ansible') }}"
+        msg: "Pattern found in a sentence: {{ 'hello ansible world' | regex_search('ansible') }}" 
+        # we can find particular pattern in the string.
 
     - name: Use join filter to combine a list into a string
       ansible.builtin.debug:
         msg: "Joined names: {{ names | join(', ') }}"
+        # combine the names.
