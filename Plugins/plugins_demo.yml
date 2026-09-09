@@ -1,6 +1,5 @@
 ---
 # Demo: Plugins in Ansible
-# Plugins extend Ansible functionality.
 # Here we use a custom filter plugin created in the 'filter_plugins' directory.
 # The plugin is loaded automatically when Ansible sees the directory next to this playbook.
 
@@ -14,10 +13,12 @@
     - name: Use a custom filter to reverse the string
       ansible.builtin.debug:
         msg: "Reversed app name: {{ app_name | reverse_text }}"
+        # we created this filer plugin to reverse the text in he filters
 
     - name: Use a custom filter to add a prefix
       ansible.builtin.debug:
         msg: "Prefixed app name: {{ app_name | add_prefix('service:') }}"
+        # custom filter to add the prefix.
 
     - name: Use built-in lookup plugin from Ansible
       ansible.builtin.debug:
